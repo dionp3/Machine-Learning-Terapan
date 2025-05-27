@@ -102,7 +102,7 @@ for col in ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']:
 X = df.drop('Outcome', axis=1)
 y = df['Outcome']
 
-"""##Normalisasi Data
+"""###Normalisasi Data
 
 Normalisasi data menggunakan MinMaxScaler akan diterapkan untuk menyetarakan skala fitur. Hal ini penting untuk algoritma yang sensitif terhadap skala fitur, meskipun untuk Decision Tree dan Random Forest dampaknya tidak terlalu signifikan. Namun, ini praktik yang baik untuk menjaga konsistensi dan adaptasi jika model lain digunakan.
 """
@@ -114,7 +114,7 @@ scaler = MinMaxScaler()
 X_scaled = scaler.fit_transform(X)
 X_scaled_df = pd.DataFrame(X_scaled, columns=X.columns) # Opsional: mengembalikan ke DataFrame untuk memudahkan inspeksi
 
-"""##Memisahkan Data Training dan Testing
+"""###Memisahkan Data Training dan Testing
 
 Data akan dibagi menjadi training set dan testing set dengan rasio 80:20 menggunakan train_test_split. Penggunaan random_state akan memastikan reproduktibilitas hasil pembagian data.
 """
@@ -131,16 +131,32 @@ print(f"Ukuran y_test: {y_test.shape}")
 
 """##Modeling
 
-Pada tahap ini, kita akan membangun dan melatih model klasifikasi menggunakan algoritma Decision Tree dan Random Forest. Hyperparameter tuning akan dilakukan untuk menemukan konfigurasi terbaik bagi masing-masing model.
+Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan prediksi diabetes. Kami akan menjelaskan tahapan pemodelan, cara kerja algoritma, serta parameter yang digunakan pada proses pemodelan.
 
 ###Algoritma 1: Decision Tree
 
-Decision Tree adalah algoritma non-parametrik yang dapat digunakan untuk tugas klasifikasi dan regresi. Model ini membuat keputusan berdasarkan serangkaian aturan if-then yang diperoleh dari fitur data.
+Decision Tree adalah algoritma machine learning non-parametrik yang kuat dan mudah diinterpretasi, digunakan untuk tugas klasifikasi dan regresi. Cara kerjanya menyerupai pohon keputusan (if-else) yang kita buat secara manual. Model ini belajar dengan membagi data menjadi subset-subset yang lebih kecil berdasarkan fitur-fitur input. Pada setiap "node" dalam pohon, algoritma memilih fitur dan threshold yang paling baik memisahkan data ke dalam kelas outcome yang berbeda. Proses pembagian ini berlanjut secara rekursif hingga kriteria berhenti terpenuhi (misalnya, mencapai kedalaman maksimum atau jumlah sampel minimum pada sebuah node). Prediksi untuk data baru dilakukan dengan menelusuri pohon dari "akar" hingga "daun" berdasarkan nilai fitur data tersebut, dan outcome dari daun yang dicapai adalah prediksinya.
 
-####Hyperparameter yang akan di-tuning adalah:
+####Kelebihan Decision Tree:
 
-- max_depth: Kedalaman maksimum tree. Mengontrol kompleksitas model dan mencegah overfitting.
-- min_samples_split: Jumlah minimum sampel yang dibutuhkan untuk membagi sebuah node.
+- Mudah Diinterpretasi: Strukturnya yang seperti pohon membuatnya mudah dipahami dan divisualisasikan.
+- Tidak Membutuhkan Normalisasi/Skala: Tidak sensitif terhadap penskalaan fitur.
+- Mampu Menangani Data Kategorikal dan Numerik: Dapat bekerja dengan berbagai jenis data.
+
+####Kekurangan Decision Tree:
+
+- Cenderung Overfitting: Terutama pada pohon yang dalam, mudah beradaptasi terlalu spesifik pada data pelatihan.
+- Tidak Robust Terhadap Perubahan Kecil: Sedikit perubahan pada data dapat menghasilkan pohon yang sangat berbeda.
+- Bias Terhadap Kelas Dominan: Jika ada ketidakseimbangan kelas, cenderung bias ke kelas mayoritas.
+
+####Proses Pemodelan dan Hyperparameter Tuning
+
+Untuk mendapatkan performa terbaik dari Decision Tree, kami melakukan hyperparameter tuning menggunakan GridSearchCV. Proses ini mencari kombinasi hyperparameter yang optimal dengan mengevaluasi model pada berbagai kombinasi parameter melalui validasi silang (cross-validation).
+
+####Hyperparameter yang di-tuning:
+
+- max_depth: Kedalaman maksimum pohon. Ini mengontrol kompleksitas model dan membantu mencegah overfitting dengan membatasi seberapa jauh pohon dapat tumbuh.
+- min_samples_split: Jumlah minimum sampel yang dibutuhkan untuk membagi sebuah node. Jika sebuah node memiliki sampel kurang dari nilai ini, ia tidak akan dibagi lebih lanjut.
 """
 
 from sklearn.tree import DecisionTreeClassifier
@@ -163,14 +179,33 @@ grid_search_dt.fit(X_train, y_train)
 best_dt_model = grid_search_dt.best_estimator_
 print(f"Best hyperparameters for Decision Tree: {grid_search_dt.best_params_}")
 
-"""###Algoritma 2: Random Forest
+"""####Parameter Terbaik untuk Decision Tree:
+Berdasarkan hasil GridSearchCV, parameter terbaik yang didapatkan untuk Decision Tree adalah max_depth=4 dan min_samples_split=2. Nilai-nilai ini akan digunakan oleh best_dt_model untuk membuat prediksi.
 
-Random Forest adalah algoritma ensemble yang membangun banyak Decision Tree pada subset data dan fitur yang berbeda. Prediksi akhir adalah hasil voting dari semua tree. Ini umumnya lebih robust dan akurat daripada Decision Tree tunggal.
+###Algoritma 2: Random Forest
 
-####Hyperparameter yang akan di-tuning adalah:
+Random Forest adalah algoritma ensemble learning yang membangun banyak Decision Tree (disebut juga "pohon keputusan") secara independen dan paralel. Ide dasarnya adalah bahwa banyak pohon yang "agak benar" dan beragam akan secara kolektif menghasilkan prediksi yang lebih akurat dan stabil dibandingkan satu pohon keputusan tunggal. Setiap pohon dalam forest dilatih pada subset data pelatihan yang di-bootstrap (dengan penggantian) dan hanya menggunakan subset fitur acak pada setiap node. Ketika melakukan prediksi, Random Forest mengumpulkan voting dari semua pohon (untuk klasifikasi) atau merata-ratakan prediksi (untuk regresi) untuk menghasilkan outcome akhir. Proses ini membantu mengurangi masalah overfitting yang sering terjadi pada Decision Tree tunggal dan meningkatkan generalisasi model.
 
-- n_estimators: Jumlah tree dalam forest.
-- max_depth: Kedalaman maksimum setiap tree dalam forest.
+####Kelebihan Random Forest:
+
+- Akurasi Tinggi: Umumnya memberikan akurasi yang sangat baik dan robust.
+- Mengatasi Overfitting: Karena merupakan algoritma ensemble, sangat efektif dalam mengurangi overfitting dibandingkan Decision Tree tunggal.
+- Dapat Menangani Banyak Fitur: Mampu bekerja dengan dataset yang memiliki banyak fitur.
+- Kurang Sensitif Terhadap Outlier: Lebih robust terhadap outlier dan missing values.
+
+####Kekurangan Random Forest:
+
+- Kurang Dapat Diinterpretasi: Dibandingkan Decision Tree tunggal, Random Forest lebih sulit untuk diinterpretasi karena melibatkan banyak pohon.
+- Membutuhkan Sumber Daya Komputasi Lebih Besar: Pelatihan banyak pohon membutuhkan lebih banyak waktu dan memori.
+
+####Proses Pemodelan dan Hyperparameter Tuning
+
+Sama seperti Decision Tree, kami juga melakukan hyperparameter tuning untuk Random Forest menggunakan GridSearchCV guna menemukan konfigurasi parameter terbaik yang mengoptimalkan performa model.
+
+####Hyperparameter yang di-tuning:
+
+- n_estimators: Jumlah pohon (Decision Tree) dalam forest. Semakin banyak pohon, semakin stabil prediksinya, namun komputasi juga akan meningkat.
+- max_depth: Kedalaman maksimum setiap pohon dalam forest. Membatasi pertumbuhan pohon individu untuk mengontrol kompleksitas.
 """
 
 from sklearn.ensemble import RandomForestClassifier
@@ -192,22 +227,27 @@ grid_search_rf.fit(X_train, y_train)
 best_rf_model = grid_search_rf.best_estimator_
 print(f"Best hyperparameters for Random Forest: {grid_search_rf.best_params_}")
 
-"""##Evaluation
+"""####Parameter Terbaik untuk Random Forest:
 
-Tahap evaluasi ini krusial untuk memahami seberapa baik performa model dalam memprediksi diabetes pada data yang belum pernah dilihat sebelumnya.
+Berdasarkan hasil GridSearchCV, parameter terbaik yang didapatkan untuk Random Forest adalah n_estimators=100 dan max_depth=None. Nilai-nilai ini akan digunakan oleh best_rf_model untuk membuat prediksi.
 
-###Metrik yang Digunakan
-Kita akan menggunakan beberapa metrik evaluasi klasifikasi untuk mendapatkan gambaran yang komprehensif:
+##Evaluation
 
-- Akurasi: Proporsi total prediksi yang benar (baik positif maupun negatif). Accuracy= TP+TN/TP+TN+FP+FN
+Pada bagian ini, kami akan menyebutkan metrik evaluasi yang digunakan dan menjelaskan hasil proyek berdasarkan metrik-metrik tersebut.
 
-- Precision: Proporsi prediksi positif yang sebenarnya positif (menghindari false positives). Penting ketika false positives memiliki konsekuensi tinggi. Precision=
+###Metrik evaluasi yang Digunakan
+
+Dalam proyek klasifikasi deteksi diabetes ini, kami menggunakan beberapa metrik evaluasi untuk mendapatkan gambaran yang komprehensif mengenai performa model, mengingat pentingnya identifikasi kasus positif dan negatif:
+
+- Akurasi (Accuracy): Mengukur proporsi total prediksi yang benar (baik positif maupun negatif). Ini adalah metrik yang intuitif dan sering digunakan, namun bisa menyesatkan pada dataset dengan class imbalance. Formula: Accuracy= TP+TN/TP+TN+FP+FN
+
+- Precision: Mengukur proporsi prediksi positif yang sebenarnya positif. Ini penting ketika biaya false positives (salah mendiagnosis orang sehat sebagai penderita diabetes) sangat tinggi. Formula: Precision=
 TP+FP
 TP
 
-- Recall (Sensitivity): Proporsi kasus positif sebenarnya yang berhasil dideteksi (menghindari false negatives). Penting ketika false negatives memiliki konsekuensi tinggi (misalnya, melewatkan diagnosis diabetes). Recall= TP/TP+FN
+- Recall (Sensitivity): Mengukur proporsi kasus positif sebenarnya yang berhasil dideteksi oleh model. Ini sangat krusial ketika biaya false negatives (melewatkan diagnosis diabetes pada penderita sebenarnya) sangat tinggi, seperti dalam aplikasi medis. Formula: Recall= TP/TP+FN
 
-- F1 Score: Rata-rata harmonik dari precision dan recall. Metrik yang baik untuk mengukur kinerja model ketika ada class imbalance. F1Score=2× (Precision×Recall/Precision+Recall)
+- F1 Score: Merupakan rata-rata harmonik dari precision dan recall. Metrik ini sangat berguna ketika ada ketidakseimbangan kelas dan kita ingin keseimbangan antara precision dan recall, bukan hanya salah satunya. Formula: F1Score=2× (Precision×Recall/Precision+Recall)
 
 Dimana:
 
@@ -216,10 +256,12 @@ Dimana:
 - FP (False Positive): Jumlah kasus non-diabetes yang salah diprediksi sebagai diabetes.
 - FN (False Negative): Jumlah kasus diabetes yang salah diprediksi sebagai non-diabetes.
 
-###Implementasi Evaluasi
+###Hasil Proyek Berdasarkan Metrik Evaluasi
+
+Setelah melatih dan menyetel kedua model, kami mengevaluasi performa mereka pada testing set yang belum pernah dilihat model sebelumnya. Berikut adalah hasil evaluasinya:
 """
 
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score # <--- BARIS INI YANG PENTING DITAMBAHKAN
 
 # Prediksi menggunakan model Decision Tree terbaik
 y_pred_dt = best_dt_model.predict(X_test)
@@ -253,7 +295,7 @@ print(f"Recall: {recall_rf:.4f}")
 print(f"F1 Score: {f1_rf:.4f}")
 print("-" * 30)
 
-"""##Analisis Hasil:
+"""###Analisis Hasil:
 
 Dari tabel hasil evaluasi, kita dapat mengamati perbedaan performa yang menarik antara Decision Tree dan Random Forest:
 
@@ -262,7 +304,7 @@ Dari tabel hasil evaluasi, kita dapat mengamati perbedaan performa yang menarik 
 - Recall: Decision Tree menunjukkan recall yang significantly lebih tinggi (0.7636) dibandingkan Random Forest (0.6545). Ini adalah temuan krusial: Decision Tree lebih baik dalam mengidentifikasi sebagian besar kasus diabetes yang sebenarnya. Dalam konteks deteksi penyakit seperti diabetes, recall yang tinggi sangat penting untuk meminimalkan false negatives (kasus diabetes yang tidak terdeteksi), karena melewatkan diagnosis dapat memiliki konsekuensi kesehatan yang serius.
 - F1 Score: Decision Tree sedikit lebih unggul dalam F1 Score (0.6512) dibandingkan Random Forest (0.6429). Meskipun selisihnya tipis, F1 Score yang lebih tinggi pada Decision Tree menunjukkan keseimbangan yang sedikit lebih baik antara precision dan recall dalam kasus ini, terutama didorong oleh recall yang sangat tinggi.
 
-###Kesimpulan dari Analisis:
+####Kesimpulan dari Analisis:
 
 Pilihan model terbaik sangat bergantung pada prioritas kasus penggunaan. Jika tujuan utamanya adalah untuk meminimalkan false negatives (memastikan semua kasus diabetes terdeteksi, bahkan jika ada beberapa false positives), maka Decision Tree mungkin menjadi pilihan yang lebih unggul karena recall-nya yang tinggi. Ini relevan dalam skenario skrining awal di mana deteksi dini lebih diutamakan.
 
