@@ -71,20 +71,14 @@ Setelah memuat dataset, kami melakukan eksplorasi awal untuk memahami karakteris
 **Distribusi *Outcome***:
 Data menunjukkan adanya ketidakseimbangan kelas (*class imbalance*) pada variabel target `Outcome`. Sekitar 65% sampel adalah non-diabetes dan 35% adalah diabetes. Ini akan memengaruhi pemilihan metrik evaluasi.
 
-*Visualisasi: Distribusi Jumlah Pasien Diabetes vs. Non-Diabetes*
-
 **Nilai 0 yang Tidak Valid**:
 Beberapa fitur numerik seperti `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, dan `BMI` mengandung nilai 0 yang secara medis tidak mungkin. Nilai-nilai ini diperlakukan sebagai *missing values* dan akan ditangani pada tahap *Data Preparation*.
 
 **Distribusi Fitur Berdasarkan *Outcome***:
 Analisis distribusi fitur-fitur penting berdasarkan label `Outcome` memberikan wawasan tentang relevansi fitur. Terlihat bahwa fitur seperti `Glucose`, `BMI`, dan `Age` menunjukkan perbedaan distribusi yang signifikan antara kedua kelompok, mengindikasikan potensi prediktifnya.
 
-*Visualisasi: Distribusi Kadar Glukosa, BMI, Usia berdasarkan Outcome*
-
 **Korelasi Antar Fitur dan dengan *Outcome***:
 Matriks korelasi membantu memahami hubungan linier antar fitur dan seberapa kuat hubungan fitur dengan variabel target `Outcome`. Fitur `Glucose` menunjukkan korelasi positif tertinggi dengan `Outcome`, menggarisbawahi pentingnya kadar glukosa dalam diagnosis diabetes.
-
-*Visualisasi: Heatmap Korelasi Antar Fitur dan Outcome*
 
 -----
 
@@ -214,20 +208,6 @@ Setelah melatih dan menyetel kedua model, kami mengevaluasi performa mereka pada
 
 **Pemilihan Model Terbaik sebagai Solusi**: Mengingat bahwa dalam domain kesehatan, **konsekuensi dari *false negatives* (melewatkan diagnosis diabetes) seringkali lebih serius daripada *false positives*** (salah mendiagnosis, yang dapat dikoreksi dengan pemeriksaan lebih lanjut), **Decision Tree dengan *recall* yang lebih tinggi (`0.7636`) dipertimbangkan sebagai model yang lebih diutamakan sebagai solusi awal** untuk tujuan skrining yang sensitif.
 
-### Visualisasi Metrik Evaluasi
-
-**Confusion Matrix:**
-*Confusion Matrix* memberikan rincian lengkap mengenai *True Positives*, *True Negatives*, *False Positives*, dan *False Negatives* dari prediksi model.
-
-*Visualisasi: Confusion Matrix - Decision Tree*
-
-*Visualisasi: Confusion Matrix - Random Forest*
-
-**Receiver Operating Characteristic (ROC) Curve:**
-Kurva ROC menggambarkan performa model klasifikasi pada semua ambang batas klasifikasi. Semakin dekat kurva ke sudut kiri atas (dan semakin tinggi AUC-nya), semakin baik kinerja model dalam membedakan antara kelas positif dan negatif.
-
-*Visualisasi: Kurva ROC untuk Decision Tree dan Random Forest*
-
 -----
 
 ## Kesimpulan
@@ -284,7 +264,3 @@ Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file `LICENSE` untuk detail 
 ## Referensi
 
   * [1] World Health Organization. (2023). Diabetes. [Online]. Available: [https://www.who.int/news-room/fact-sheets/detail/diabetes](https://www.who.int/news-room/fact-sheets/detail/diabetes)
-
------
-
-Dengan *README.md* ini, proyek Anda seharusnya sudah sangat lengkap dan memenuhi semua kriteria.
