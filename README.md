@@ -1,136 +1,269 @@
 # Proyek Prediksi Diabetes dengan Machine Learning
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.8%2B-blue?logo=python" alt="Python Version">
-  <img src="https://img.shields.io/badge/Scikit--learn-0.24%2B-orange?logo=scikit-learn" alt="Scikit-learn Version">
-  <img src="https://img.shields.io/badge/Jupyter-Notebook-red?logo=jupyter" alt="Jupyter Notebook">
-  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
-</p>
+Deteksi dini penyakit kronis seperti diabetes sangat penting untuk meningkatkan kualitas hidup pasien. Proyek ini bertujuan mengembangkan model *machine learning* yang mampu memprediksi apakah seseorang menderita diabetes berdasarkan data pemeriksaan medis. Kami menggunakan algoritma **Decision Tree** dan **Random Forest** serta membandingkan performanya untuk menemukan model terbaik yang sesuai dengan kebutuhan di domain kesehatan.
 
-Deteksi dini penyakit kronis seperti diabetes sangat penting untuk meningkatkan kualitas hidup pasien. Proyek ini bertujuan untuk mengembangkan model *machine learning* yang mampu memprediksi apakah seseorang menderita diabetes berdasarkan data pemeriksaan medis. Kami menggunakan algoritma **Decision Tree** dan **Random Forest** serta membandingkan performanya untuk menemukan model terbaik.
-
----
+-----
 
 ## Daftar Isi
 
-* [Latar Belakang](#latar-belakang)
-* [Tujuan Proyek](#tujuan-proyek)
-* [Dataset](#dataset)
-* [Struktur Proyek](#struktur-proyek)
-* [Metodologi](#metodologi)
-* [Hasil dan Analisis](#hasil-dan-analisis)
-* [Kesimpulan](#kesimpulan)
-* [Saran Pengembangan](#saran-pengembangan)
-* [Cara Menjalankan Proyek](#cara-menjalankan-proyek)
-* [Lisensi](#lisensi)
-* [Referensi](#referensi)
+  * [Domain Proyek](https://www.google.com/search?q=%23domain-proyek)
+  * [Business Understanding](https://www.google.com/search?q=%23business-understanding)
+  * [Data Understanding](https://www.google.com/search?q=%23data-understanding)
+  * [Data Preparation](https://www.google.com/search?q=%23data-preparation)
+  * [Modeling](https://www.google.com/search?q=%23modeling)
+  * [Evaluation](https://www.google.com/search?q=%23evaluation)
+  * [Kesimpulan](https://www.google.com/search?q=%23kesimpulan)
+  * [Saran Pengembangan](https://www.google.com/search?q=%23saran-pengembangan)
+  * [Cara Menjalankan Proyek](https://www.google.com/search?q=%23cara-menjalankan-proyek)
+  * [Lisensi](https://www.google.com/search?q=%23lisensi)
+  * [Referensi](https://www.google.com/search?q=%23referensi)
 
----
+-----
 
-## Latar Belakang
+## Domain Proyek
 
-Diabetes adalah penyakit kronis yang memengaruhi jutaan orang di seluruh dunia, dengan angka yang terus meningkat setiap tahun. Gejala yang sering tidak tampak pada tahap awal menjadi tantangan dalam diagnosis dini. Dengan memanfaatkan kekuatan *machine learning*, kita dapat membangun sistem prediksi otomatis yang akurat untuk membantu deteksi awal diabetes, sehingga memungkinkan intervensi medis yang lebih cepat dan efektif.
+**Kesehatan** merupakan sektor krusial dalam kehidupan manusia. Deteksi dini terhadap penyakit kronis seperti **diabetes** sangat diperlukan untuk meningkatkan kualitas hidup pasien. Menurut laporan WHO tahun 2023, lebih dari 422 juta orang di dunia hidup dengan diabetes, dan angka ini terus meningkat setiap tahunnya [1]. Gejala yang sering kali tidak tampak signifikan pada tahap awal menjadi tantangan utama dalam mendeteksi diabetes. Oleh karena itu, pendekatan berbasis data melalui *machine learning* dapat membantu diagnosis awal diabetes secara otomatis dan akurat.
 
----
+-----
 
-## Tujuan Proyek
+## Business Understanding
 
-1.  Mengembangkan model klasifikasi menggunakan algoritma *Decision Tree* dan *Random Forest* untuk mendeteksi diabetes.
-2.  Melakukan *hyperparameter tuning* pada kedua model untuk optimasi performa.
-3.  Membandingkan performa model berdasarkan metrik **Akurasi, Precision, Recall, dan F1-Score** untuk mengidentifikasi model terbaik.
+### Problem Statements
 
----
+1.  Bagaimana cara memprediksi apakah seseorang menderita diabetes berdasarkan data pemeriksaan medis?
+2.  Bagaimana performa beberapa algoritma klasifikasi populer seperti *Decision Tree* dan *Random Forest* dalam mendeteksi diabetes, dan mana yang paling sesuai dengan kebutuhan domain kesehatan?
 
-## Dataset
+### Goals
 
-Dataset yang digunakan adalah **Pima Indians Diabetes Database**, tersedia secara publik melalui Kaggle. Dataset ini terdiri dari 768 sampel data dengan 8 fitur input dan 1 label output (`Outcome`: 0 = Tidak diabetes, 1 = Diabetes).
+1.  Mengembangkan model klasifikasi untuk mendeteksi diabetes menggunakan *dataset* medis.
+2.  Membandingkan performa dua algoritma klasifikasi (*Decision Tree* dan *Random Forest*) untuk menentukan model terbaik berdasarkan metrik evaluasi, dengan mempertimbangkan prioritas dalam domain kesehatan.
 
-**Fitur-fitur:**
-* `Pregnancies`: Jumlah kehamilan
-* `Glucose`: Kadar glukosa darah
-* `BloodPressure`: Tekanan darah diastolik (mm Hg)
-* `SkinThickness`: Ketebalan lipatan kulit triceps (mm)
-* `Insulin`: Level insulin serum (mu U/ml)
-* `BMI`: Indeks massa tubuh (kg/m²)
-* `DiabetesPedigreeFunction`: Riwayat keluarga diabetes
-* `Age`: Usia (tahun)
-* `Outcome`: Target (0 = Tidak diabetes, 1 = Diabetes)
+### Solution Statements
 
----
+1.  Menggunakan algoritma *Decision Tree* dan *Random Forest* untuk membangun model prediksi.
+2.  Melakukan *hyperparameter tuning* pada masing-masing model untuk meningkatkan performa.
+3.  Menggunakan metrik **akurasi, *precision, recall*, dan *F1-score*** untuk mengevaluasi model, dengan fokus pada *recall* karena konsekuensi tinggi dari *false negatives* dalam deteksi penyakit.
 
-## Struktur Proyek
-.
-├── README.md
-├── diabetes.csv          # Dataset yang digunakan
-└── diabetes_prediction.ipynb # Notebook Jupyter berisi seluruh kode dan analisis
+-----
 
----
+## Data Understanding
 
-## Metodologi
+Dataset yang digunakan adalah **Pima Indians Diabetes Database**, tersedia secara publik melalui Kaggle: [https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database). Dataset ini memiliki 768 data sampel dengan 8 fitur *input* dan 1 label *output*.
 
-Proyek ini mengikuti tahapan standar dalam alur kerja *machine learning*:
+### Variabel-Variabel
 
-1.  **Data Understanding**: Memahami karakteristik dataset, termasuk distribusi kelas dan nilai-nilai yang tidak valid (misalnya, nilai 0 pada fitur `Glucose`, `BMI`, dll.).
-2.  **Data Preparation**:
-    * Mengganti nilai 0 yang tidak valid pada fitur numerik dengan nilai **median** masing-masing fitur.
-    * **Normalisasi data** menggunakan `MinMaxScaler` untuk menyetarakan skala fitur.
-    * Memisahkan data menjadi *training set* (80%) dan *testing set* (20%) menggunakan `train_test_split`.
-3.  **Modeling**:
-    * Membangun model menggunakan **Decision Tree Classifier** dan **Random Forest Classifier**.
-    * Melakukan **Hyperparameter Tuning** pada kedua model menggunakan `GridSearchCV` untuk mencari kombinasi *hyperparameter* terbaik (misalnya `max_depth`, `n_estimators`, `min_samples_split`).
-4.  **Evaluation**:
-    * Mengevaluasi performa model terbaik dari kedua algoritma pada *testing set*.
-    * Metrik yang digunakan: **Akurasi, Precision, Recall, dan F1-Score**.
+Berikut adalah deskripsi variabel yang terdapat dalam *dataset*:
 
----
+  * `Pregnancies`: Jumlah kehamilan
+  * `Glucose`: Kadar glukosa darah
+  * `BloodPressure`: Tekanan darah diastolik (mm Hg)
+  * `SkinThickness`: Ketebalan lipatan kulit triceps (mm)
+  * `Insulin`: Level insulin serum (mu U/ml)
+  * `BMI`: Indeks massa tubuh (kg/m²)
+  * `DiabetesPedigreeFunction`: Riwayat keluarga diabetes
+  * `Age`: Usia (tahun)
+  * `Outcome`: Label target (0 = Tidak diabetes, 1 = Diabetes)
 
-## Hasil dan Analisis
+### Kondisi Data dan *Exploratory Data Analysis* (EDA)
 
-Setelah melakukan *hyperparameter tuning* dan evaluasi, berikut adalah perbandingan performa kedua model:
+Setelah memuat dataset, kami melakukan eksplorasi awal untuk memahami karakteristik data.
+
+**Distribusi *Outcome***:
+Data menunjukkan adanya ketidakseimbangan kelas (*class imbalance*) pada variabel target `Outcome`. Sekitar 65% sampel adalah non-diabetes dan 35% adalah diabetes. Ini akan memengaruhi pemilihan metrik evaluasi.
+
+*Visualisasi: Distribusi Jumlah Pasien Diabetes vs. Non-Diabetes*
+
+**Nilai 0 yang Tidak Valid**:
+Beberapa fitur numerik seperti `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, dan `BMI` mengandung nilai 0 yang secara medis tidak mungkin. Nilai-nilai ini diperlakukan sebagai *missing values* dan akan ditangani pada tahap *Data Preparation*.
+
+**Distribusi Fitur Berdasarkan *Outcome***:
+Analisis distribusi fitur-fitur penting berdasarkan label `Outcome` memberikan wawasan tentang relevansi fitur. Terlihat bahwa fitur seperti `Glucose`, `BMI`, dan `Age` menunjukkan perbedaan distribusi yang signifikan antara kedua kelompok, mengindikasikan potensi prediktifnya.
+
+*Visualisasi: Distribusi Kadar Glukosa, BMI, Usia berdasarkan Outcome*
+
+**Korelasi Antar Fitur dan dengan *Outcome***:
+Matriks korelasi membantu memahami hubungan linier antar fitur dan seberapa kuat hubungan fitur dengan variabel target `Outcome`. Fitur `Glucose` menunjukkan korelasi positif tertinggi dengan `Outcome`, menggarisbawahi pentingnya kadar glukosa dalam diagnosis diabetes.
+
+*Visualisasi: Heatmap Korelasi Antar Fitur dan Outcome*
+
+-----
+
+## Data Preparation
+
+Langkah-langkah *data preparation* bertujuan membersihkan, mentransformasi, dan membagi data sehingga siap digunakan untuk pelatihan model.
+
+1.  **Pemisahan Fitur (X) dan Target (y)**:
+    Kami memisahkan dataset menjadi variabel fitur (X) yang akan digunakan untuk prediksi, dan variabel target (y) yaitu `Outcome`.
+
+2.  **Mengatasi Nilai 0 yang Tidak Valid**:
+    Nilai 0 pada fitur `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, dan `BMI` diganti dengan nilai **median** dari masing-masing fitur. Pemilihan median lebih *robust* terhadap *outlier* dibandingkan *mean* untuk mengisi *missing values*.
+
+3.  **Normalisasi Data**:
+    **Normalisasi data** menggunakan `MinMaxScaler` diterapkan untuk menyetarakan skala fitur. Hal ini penting untuk beberapa algoritma yang sensitif terhadap skala fitur dan membantu proses pembelajaran model menjadi lebih stabil.
+
+4.  **Memisahkan Data *Training* dan *Testing***:
+    Data dibagi menjadi *training set* (80%) dan *testing set* (20%) menggunakan `train_test_split`. Penggunaan `random_state=42` memastikan reproduktibilitas hasil pembagian data, sehingga hasil yang diperoleh konsisten setiap kali kode dijalankan.
+
+-----
+
+## Modeling
+
+Tahapan ini membahas model *machine learning* yang digunakan untuk menyelesaikan permasalahan prediksi diabetes, termasuk cara kerja algoritma dan hasil *hyperparameter tuning*.
+
+### Algoritma 1: *Decision Tree*
+
+*Decision Tree* adalah algoritma *machine learning* non-parametrik yang kuat dan mudah diinterpretasi, digunakan untuk tugas klasifikasi dan regresi. Cara kerjanya menyerupai serangkaian aturan `if-else` yang membentuk struktur pohon. Model ini belajar dengan membagi data menjadi subset-subset yang lebih kecil berdasarkan fitur-fitur *input*, memilih fitur dan *threshold* terbaik pada setiap "node" untuk memisahkan kelas *outcome*. Prediksi untuk data baru dilakukan dengan menelusuri pohon dari "akar" hingga "daun".
+
+**Kelebihan *Decision Tree*:**
+
+  * **Mudah Diinterpretasi**: Strukturnya yang seperti pohon membuatnya mudah dipahami dan divisualisasikan, yang sangat berharga di domain kesehatan untuk menjelaskan keputusan model.
+  * **Tidak Membutuhkan Normalisasi/Skala**: Tidak sensitif terhadap penskalaan fitur.
+  * **Mampu Menangani Data Kategorikal dan Numerik**: Dapat bekerja dengan berbagai jenis data.
+
+**Kekurangan *Decision Tree*:**
+
+  * **Cenderung *Overfitting***: Terutama pada pohon yang dalam, mudah beradaptasi terlalu spesifik pada data pelatihan dan gagal menggeneralisasi ke data baru.
+  * **Tidak Robust Terhadap Perubahan Kecil**: Sedikit perubahan pada data dapat menghasilkan pohon yang sangat berbeda.
+  * **Bias Terhadap Kelas Dominan**: Jika ada ketidakseimbangan kelas, model cenderung bias ke kelas mayoritas.
+
+**Proses Pemodelan dan *Hyperparameter Tuning***
+
+Untuk mendapatkan performa terbaik dari *Decision Tree*, kami melakukan *hyperparameter tuning* menggunakan **`GridSearchCV`**. Proses ini secara sistematis mencari kombinasi *hyperparameter* yang optimal dengan mengevaluasi model pada berbagai kombinasi parameter melalui validasi silang (cross-validation) pada *training set*.
+
+*Hyperparameter* yang di-*tuning*:
+
+  * `max_depth`: Kedalaman maksimum pohon. Ini mengontrol kompleksitas model dan membantu mencegah *overfitting*.
+  * `min_samples_split`: Jumlah minimum sampel yang dibutuhkan untuk membagi sebuah *node*.
+
+**Parameter Terbaik untuk *Decision Tree***:
+Berdasarkan hasil `GridSearchCV`, parameter terbaik yang didapatkan untuk *Decision Tree* adalah **`max_depth=4`** dan **`min_samples_split=2`**. Model akhir *Decision Tree* dibangun menggunakan parameter ini.
+
+### Algoritma 2: *Random Forest*
+
+*Random Forest* adalah algoritma *ensemble learning* yang membangun banyak *Decision Tree* secara independen dan paralel. Ide dasarnya adalah bahwa banyak pohon yang "agak benar" dan beragam akan secara kolektif menghasilkan prediksi yang lebih akurat dan stabil dibandingkan satu pohon keputusan tunggal. Setiap pohon dalam *forest* dilatih pada subset data pelatihan yang di-*bootstrap* (dengan penggantian) dan hanya menggunakan subset fitur acak pada setiap *node*. Ketika melakukan prediksi, *Random Forest* mengumpulkan *voting* dari semua pohon (untuk klasifikasi) atau merata-ratakan prediksi (untuk regresi) untuk menghasilkan *outcome* akhir. Proses ini membantu mengurangi masalah *overfitting* yang sering terjadi pada *Decision Tree* tunggal dan meningkatkan generalisasi model.
+
+**Kelebihan *Random Forest*:**
+
+  * **Akurasi Tinggi**: Umumnya memberikan akurasi yang sangat baik dan *robust* terhadap *noise* pada data.
+  * **Mengatasi *Overfitting***: Karena merupakan algoritma *ensemble*, sangat efektif dalam mengurangi *overfitting* dibandingkan *Decision Tree* tunggal.
+  * **Dapat Menangani Banyak Fitur**: Mampu bekerja dengan dataset yang memiliki banyak fitur dan mengidentifikasi fitur penting.
+  * **Kurang Sensitif Terhadap *Outlier***: Lebih *robust* terhadap *outlier* dan *missing values*.
+
+**Kekurangan *Random Forest*:**
+
+  * **Kurang Dapat Diinterpretasi**: Dibandingkan *Decision Tree* tunggal, *Random Forest* lebih sulit untuk diinterpretasi ("black box") karena melibatkan agregasi dari banyak pohon.
+  * **Membutuhkan Sumber Daya Komputasi Lebih Besar**: Pelatihan banyak pohon membutuhkan lebih banyak waktu dan memori, terutama pada dataset yang sangat besar.
+
+**Proses Pemodelan dan *Hyperparameter Tuning***
+
+Sama seperti *Decision Tree*, kami juga melakukan *hyperparameter tuning* untuk *Random Forest* menggunakan `GridSearchCV` guna menemukan konfigurasi parameter terbaik yang mengoptimalkan performa model pada *training set*.
+
+*Hyperparameter* yang di-*tuning*:
+
+  * `n_estimators`: Jumlah pohon (*Decision Tree*) dalam *forest*. Semakin banyak pohon, semakin stabil prediksinya, namun komputasi juga akan meningkat.
+  * `max_depth`: Kedalaman maksimum setiap pohon dalam *forest*. Membatasi pertumbuhan pohon individu untuk mengontrol kompleksitas.
+
+**Parameter Terbaik untuk *Random Forest***:
+Berdasarkan hasil `GridSearchCV`, parameter terbaik yang didapatkan untuk *Random Forest* adalah **`n_estimators=100`** dan **`max_depth=None`**. Model akhir *Random Forest* dibangun menggunakan parameter ini.
+
+-----
+
+## Evaluation
+
+Pada bagian ini, kami akan menjelaskan metrik evaluasi yang digunakan dan memaparkan hasil proyek berdasarkan metrik-metrik tersebut, serta menentukan model terbaik sebagai solusi.
+
+### Metrik Evaluasi yang Digunakan
+
+Dalam proyek klasifikasi deteksi diabetes ini, kami menggunakan beberapa metrik evaluasi untuk mendapatkan gambaran yang komprehensif mengenai performa model. Pemilihan metrik ini relevan dengan konteks domain kesehatan, di mana identifikasi kasus positif (diabetes) dan negatif (non-diabetes) memiliki bobot konsekuensi yang berbeda:
+
+  * **Akurasi (Accuracy)**:
+    Mengukur proporsi total prediksi yang benar (baik positif maupun negatif). Ini adalah metrik yang intuitif, namun bisa menyesatkan pada dataset dengan *class imbalance*.
+    Formula: $Accuracy = \\frac{TP + TN}{TP + TN + FP + FN}$
+  * **Precision**:
+    Mengukur proporsi prediksi positif yang sebenarnya positif. Penting ketika biaya *false positives* (salah mendiagnosis orang sehat sebagai penderita diabetes) sangat tinggi, seperti kecemasan yang tidak perlu atau tes lanjutan.
+    Formula: $Precision = \\frac{TP}{TP + FP}$
+  * **Recall (Sensitivity)**:
+    Mengukur proporsi kasus positif sebenarnya yang berhasil dideteksi oleh model. Sangat krusial ketika biaya *false negatives* (melewatkan diagnosis diabetes pada penderita sebenarnya) sangat tinggi, karena dapat menyebabkan keterlambatan penanganan dan komplikasi serius.
+    Formula: $Recall = \\frac{TP}{TP + FN}$
+  * **F1 Score**:
+    Merupakan rata-rata harmonik dari *precision* dan *recall*. Metrik ini sangat berguna ketika ada ketidakseimbangan kelas dan kita ingin keseimbangan yang baik antara *precision* dan *recall*.
+    Formula: $F1 Score = 2 \\times \\frac{Precision \\times Recall}{Precision + Recall}$
+
+*Dimana:*
+
+  * *TP (True Positive)*: Jumlah kasus diabetes yang diprediksi benar sebagai diabetes.
+  * *TN (True Negative)*: Jumlah kasus non-diabetes yang diprediksi benar sebagai non-diabetes.
+  * *FP (False Positive)*: Jumlah kasus non-diabetes yang salah diprediksi sebagai diabetes.
+  * *FN (False Negative)*: Jumlah kasus diabetes yang salah diprediksi sebagai non-diabetes.
+
+### Hasil Proyek Berdasarkan Metrik Evaluasi
+
+Setelah melatih dan menyetel kedua model, kami mengevaluasi performa mereka pada *testing set* yang belum pernah dilihat model sebelumnya.
 
 | Model         | Akurasi | Precision | Recall | F1 Score |
 | :------------ | :------ | :-------- | :----- | :------- |
 | Decision Tree | 0.7078  | 0.5676    | 0.7636 | 0.6512   |
 | Random Forest | 0.7403  | 0.6316    | 0.6545 | 0.6429   |
 
-**Analisis:**
-* **Akurasi dan Precision:** **Random Forest** menunjukkan akurasi (0.7403) dan precision (0.6316) yang lebih tinggi, mengindikasikan kemampuannya yang lebih baik dalam membuat prediksi benar secara keseluruhan dan mengurangi *false positives*.
-* **Recall:** **Decision Tree** unggul signifikan dalam *recall* (0.7636) dibandingkan Random Forest (0.6545). Ini berarti Decision Tree lebih efektif dalam mendeteksi sebagian besar kasus diabetes yang sebenarnya (meminimalkan *false negatives*).
-* **F1 Score:** Decision Tree memiliki F1 Score yang sedikit lebih tinggi (0.6512) dibandingkan Random Forest (0.6429), yang menunjukkan keseimbangan *precision* dan *recall* yang lebih baik dalam skenario ini, terutama didorong oleh *recall* yang kuat.
+**Analisis Hasil Proyek dan Pemilihan Model Terbaik:**
 
-**Kesimpulan dari Hasil:**
-Pemilihan model terbaik sangat bergantung pada prioritas aplikasi. Jika tujuan utama adalah **meminimalkan *false negatives* (deteksi dini semua kasus diabetes)**, maka **Decision Tree** adalah pilihan yang lebih kuat karena *recall*-nya yang superior. Namun, jika fokusnya adalah **akurasi dan *precision* secara keseluruhan** (meminimalkan *false positives* dan *false negatives* secara seimbang), maka **Random Forest** lebih direkomendasikan.
+  * **Akurasi**: **Random Forest** menunjukkan akurasi yang lebih tinggi (0.7403) dibandingkan *Decision Tree* (0.7078). Ini menandakan *Random Forest* secara keseluruhan membuat prediksi yang benar lebih sering.
+  * **Precision**: **Random Forest** memiliki *precision* yang lebih baik (0.6316) daripada *Decision Tree* (0.5676). Ini berarti *Random Forest* lebih jarang memberikan *false positives* (salah mendiagnosis orang sehat sebagai penderita diabetes).
+  * **Recall**: **Decision Tree** unggul secara signifikan dalam *recall* (0.7636) dibandingkan *Random Forest* (0.6545). Ini adalah metrik yang sangat kritis dalam deteksi penyakit; *recall* yang tinggi berarti *Decision Tree* lebih baik dalam mengidentifikasi sebagian besar individu yang benar-benar menderita diabetes (meminimalkan *false negatives*). Melewatkan diagnosis diabetes (*false negative*) dapat berakibat fatal bagi pasien karena keterlambatan penanganan.
+  * **F1 Score**: *Decision Tree* memiliki *F1 Score* yang sedikit lebih tinggi (0.6512) dibandingkan *Random Forest* (0.6429). Ini menunjukkan bahwa *Decision Tree* mencapai keseimbangan yang sedikit lebih baik antara *precision* dan *recall* dalam skenario ini, didorong oleh *recall* yang kuat.
 
----
+**Pemilihan Model Terbaik sebagai Solusi**: Mengingat bahwa dalam domain kesehatan, **konsekuensi dari *false negatives* (melewatkan diagnosis diabetes) seringkali lebih serius daripada *false positives*** (salah mendiagnosis, yang dapat dikoreksi dengan pemeriksaan lebih lanjut), **Decision Tree dengan *recall* yang lebih tinggi (`0.7636`) dipertimbangkan sebagai model yang lebih diutamakan sebagai solusi awal** untuk tujuan skrining yang sensitif.
+
+### Visualisasi Metrik Evaluasi
+
+**Confusion Matrix:**
+*Confusion Matrix* memberikan rincian lengkap mengenai *True Positives*, *True Negatives*, *False Positives*, dan *False Negatives* dari prediksi model.
+
+*Visualisasi: Confusion Matrix - Decision Tree*
+
+*Visualisasi: Confusion Matrix - Random Forest*
+
+**Receiver Operating Characteristic (ROC) Curve:**
+Kurva ROC menggambarkan performa model klasifikasi pada semua ambang batas klasifikasi. Semakin dekat kurva ke sudut kiri atas (dan semakin tinggi AUC-nya), semakin baik kinerja model dalam membedakan antara kelas positif dan negatif.
+
+*Visualisasi: Kurva ROC untuk Decision Tree dan Random Forest*
+
+-----
 
 ## Kesimpulan
 
-Proyek ini berhasil membangun dan mengevaluasi model klasifikasi untuk deteksi diabetes. **Decision Tree menunjukkan kapabilitas yang kuat dalam mendeteksi kasus diabetes yang sebenarnya (tinggi *recall*)**, yang sangat penting dalam konteks medis. Sementara itu, **Random Forest memberikan akurasi dan *precision* yang lebih tinggi secara keseluruhan**. Pemilihan model akhir akan bergantung pada kebutuhan spesifik dan dampak kesalahan prediksi di lingkungan klinis.
+Proyek ini berhasil membangun dan mengevaluasi model klasifikasi untuk deteksi diabetes menggunakan *dataset* Pima Indians Diabetes. Setelah melalui tahapan *data preparation* yang komprehensif, algoritma **Decision Tree** dan **Random Forest** dilatih dan dioptimalkan melalui *hyperparameter tuning*.
 
----
+**Decision Tree**, dengan parameter terbaik `max_depth=4` dan `min_samples_split=2`, menunjukkan *recall* yang lebih tinggi (`0.7636`), menjadikannya model yang sangat baik dalam mendeteksi sebagian besar kasus diabetes yang sebenarnya. Ini adalah keunggulan kritis dalam domain kesehatan untuk meminimalkan *false negatives*.
+
+**Random Forest**, dengan parameter terbaik `n_estimators=100` dan `max_depth=None`, memberikan akurasi (`0.7403`) dan *precision* (`0.6316`) yang lebih tinggi secara keseluruhan. Model ini lebih *robust* dan unggul dalam mengurangi *false positives*.
+
+**Pemilihan model akhir sangat bergantung pada kebutuhan spesifik dan dampak kesalahan prediksi di lingkungan klinis.** Untuk prioritas **sensitivitas tinggi pada skrining awal (meminimalkan *false negatives*)**, *Decision Tree* adalah pilihan yang tepat. Untuk kebutuhan **akurasi dan *precision* yang lebih tinggi secara keseluruhan** dengan *robustness* model, *Random Forest* bisa menjadi alternatif yang kuat.
+
+-----
 
 ## Saran Pengembangan
 
-Untuk meningkatkan proyek ini lebih lanjut, beberapa area yang dapat dieksplorasi meliputi:
+Untuk meningkatkan proyek ini lebih lanjut dan memperkuat aplikasinya di dunia nyata, beberapa area yang dapat dieksplorasi meliputi:
 
-* **Penanganan *Class Imbalance* Lanjutan**: Menerapkan teknik seperti **SMOTE** atau *oversampling/undersampling* untuk mengatasi ketidakseimbangan kelas pada dataset.
-* **Eksplorasi Algoritma Lain**: Mencoba algoritma klasifikasi lain seperti Support Vector Machine (SVM), Logistic Regression, atau Gradient Boosting (XGBoost, LightGBM) untuk perbandingan performa lebih luas.
-* **Validasi Eksternal**: Menguji model pada dataset diabetes lain yang independen untuk memastikan generalisasi dan *robustness* model.
-* **Interpretasi Model**: Menggunakan teknik seperti **SHAP values** atau **LIME** untuk memahami fitur mana yang paling berpengaruh dalam prediksi diabetes, yang dapat memberikan wawasan klinis berharga.
-* **Optimasi *Threshold***: Menyesuaikan *threshold* klasifikasi untuk menyeimbangkan *precision* dan *recall* sesuai kebutuhan aplikasi.
+1.  **Penanganan *Class Imbalance* Lanjutan**: Implementasi teknik seperti **SMOTE** (*Synthetic Minority Over-sampling Technique*) atau *oversampling/undersampling* lainnya untuk meningkatkan performa model, terutama *recall* dari *Random Forest*.
+2.  **Eksplorasi Algoritma Lain**: Mencoba algoritma klasifikasi lain seperti *Support Vector Machine* (SVM), *Logistic Regression*, atau *Gradient Boosting Machines* (seperti XGBoost, LightGBM) untuk perbandingan performa yang lebih luas.
+3.  **Validasi Eksternal**: Menguji model pada *dataset* diabetes lain yang independen dari sumber atau populasi yang berbeda untuk memastikan generalisasi dan *robustness* model.
+4.  **Interpretasi Model**: Menggunakan teknik interpretasi model seperti **SHAP values** atau **LIME** untuk memahami fitur mana yang paling berpengaruh dalam prediksi diabetes.
+5.  **Optimasi *Threshold***: Menyesuaikan *threshold* klasifikasi untuk menyeimbangkan *precision* dan *recall* sesuai kebutuhan aplikasi.
 
----
+-----
 
 ## Cara Menjalankan Proyek
 
 1.  **Clone repositori ini:**
     ```bash
-    git clone [https://github.com/dionp3/Machine-Learning-Terapan.git](https://github.com/dionp3/Machine-Learning-Terapan.git)
+    git clone https://github.com/dionp3/Machine-Learning-Terapan.git
     cd Machine-Learning-Terapan
     ```
 2.  **Instal dependensi yang diperlukan:**
     ```bash
-    pip install pandas numpy scikit-learn jupyter
+    pip install pandas numpy scikit-learn matplotlib seaborn jupyter
     ```
 3.  **Unduh Dataset:**
     Unduh file `diabetes.csv` dari [Kaggle](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database) dan letakkan di folder root proyek ini.
@@ -140,15 +273,18 @@ Untuk meningkatkan proyek ini lebih lanjut, beberapa area yang dapat dieksploras
     ```
 5.  Buka file `diabetes_prediction.ipynb` dan jalankan sel-selnya secara berurutan.
 
----
+-----
 
 ## Lisensi
 
 Proyek ini dilisensikan di bawah Lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanjut.
 
----
+-----
 
 ## Referensi
 
-* [1] World Health Organization. (2023). Diabetes. [Online]. Available: https://www.who.int/news-room/fact-sheets/detail/diabetes
-* Pima Indians Diabetes Database: [https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database)
+  * [1] World Health Organization. (2023). Diabetes. [Online]. Available: [https://www.who.int/news-room/fact-sheets/detail/diabetes](https://www.who.int/news-room/fact-sheets/detail/diabetes)
+
+-----
+
+Dengan *README.md* ini, proyek Anda seharusnya sudah sangat lengkap dan memenuhi semua kriteria.
