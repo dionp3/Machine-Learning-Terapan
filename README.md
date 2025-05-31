@@ -86,16 +86,19 @@ Matriks korelasi membantu memahami hubungan linier antar fitur dan seberapa kuat
 
 Langkah-langkah *data preparation* bertujuan membersihkan, mentransformasi, dan membagi data sehingga siap digunakan untuk pelatihan model.
 
-1.  **Pemisahan Fitur (X) dan Target (y)**:
-    Kami memisahkan dataset menjadi variabel fitur (X) yang akan digunakan untuk prediksi, dan variabel target (y) yaitu `Outcome`.
-
-2.  **Mengatasi Nilai 0 yang Tidak Valid**:
+1.  **Mengatasi Nilai 0 yang Tidak Valid**:
     Nilai 0 pada fitur `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, dan `BMI` diganti dengan nilai **median** dari masing-masing fitur. Pemilihan median lebih *robust* terhadap *outlier* dibandingkan *mean* untuk mengisi *missing values*.
 
-3.  **Normalisasi Data**:
+2. **Penanganan Nilai Kosong (Missing Value)**:
+    Beberapa kolom seperti `Glucose`, `BloodPressure`, `SkinThickness`, `Insulin`, dan `BMI` memiliki nilai 0 yang secara medis tidak masuk akal dan dianggap sebagai *missing value*. Oleh karena itu, nilai 0 pada kolom-kolom tersebut diubah menjadi `NaN`, lalu dilakukan imputasi menggunakan nilai **median** dari masing-masing kolom. 
+
+3.  **Pemisahan Fitur (X) dan Target (y)**:
+    Kami memisahkan dataset menjadi variabel fitur (X) yang akan digunakan untuk prediksi, dan variabel target (y) yaitu `Outcome`.
+
+4.  **Normalisasi Data**:
     **Normalisasi data** menggunakan `MinMaxScaler` diterapkan untuk menyetarakan skala fitur. Hal ini penting untuk beberapa algoritma yang sensitif terhadap skala fitur dan membantu proses pembelajaran model menjadi lebih stabil.
 
-4.  **Memisahkan Data *Training* dan *Testing***:
+5.  **Memisahkan Data *Training* dan *Testing***:
     Data dibagi menjadi *training set* (80%) dan *testing set* (20%) menggunakan `train_test_split`. Penggunaan `random_state=42` memastikan reproduktibilitas hasil pembagian data, sehingga hasil yang diperoleh konsisten setiap kali kode dijalankan.
 
 -----
@@ -130,7 +133,26 @@ Untuk mendapatkan performa terbaik dari *Decision Tree*, kami melakukan *hyperpa
   * `min_samples_split`: Jumlah minimum sampel yang dibutuhkan untuk membagi sebuah *node*.
 
 **Parameter Terbaik untuk *Decision Tree***:
-Berdasarkan hasil `GridSearchCV`, parameter terbaik yang didapatkan untuk *Decision Tree* adalah **`max_depth=4`** dan **`min_samples_split=2`**. Model akhir *Decision Tree* dibangun menggunakan parameter ini.
+
+Pada model Decision Tree, dilakukan pencarian kombinasi parameter terbaik menggunakan teknik **GridSearchCV**. Parameter yang dieksplorasi beserta penjelasannya adalah sebagai berikut:
+
+- **`max_depth`**  
+  Parameter ini menentukan kedalaman maksimum dari pohon keputusan. Kedalaman pohon yang terlalu besar dapat menyebabkan overfitting, sementara kedalaman yang terlalu kecil bisa menyebabkan underfitting. Nilai yang diuji dalam grid search adalah:
+  - `4`, `6`, `8`, `10`, dan `None`  
+  Nilai `None` berarti tidak ada batasan kedalaman, sehingga pohon akan tumbuh hingga semua node sempurna atau jumlah minimum sampel tidak terpenuhi.
+
+- **`min_samples_split`**  
+  Menentukan jumlah minimum sampel yang dibutuhkan untuk membagi node internal. Parameter ini berfungsi untuk mengontrol pembentukan cabang baru dalam pohon. Nilai yang diuji:
+  - `2`, `5`, dan `10`  
+  Nilai yang lebih besar akan menghasilkan pohon yang lebih sederhana dan menghindari overfitting, karena model tidak akan membagi node jika tidak memiliki cukup sampel.
+
+Grid search dilakukan menggunakan metrik **F1-score** sebagai acuan untuk memilih parameter terbaik, karena metrik ini memberikan keseimbangan antara *precision* dan *recall*, khususnya pada kasus dengan distribusi kelas yang tidak seimbang.
+
+Setelah proses pencarian selesai, diperoleh parameter terbaik:
+- `max_depth = 4`
+- `min_samples_split = 2`
+
+Model final dibangun dengan konfigurasi tersebut untuk kemudian dievaluasi terhadap data uji.
 
 ### Algoritma 2: *Random Forest*
 
@@ -158,7 +180,26 @@ Sama seperti *Decision Tree*, kami juga melakukan *hyperparameter tuning* untuk 
   * `max_depth`: Kedalaman maksimum setiap pohon dalam *forest*. Membatasi pertumbuhan pohon individu untuk mengontrol kompleksitas.
 
 **Parameter Terbaik untuk *Random Forest***:
-Berdasarkan hasil `GridSearchCV`, parameter terbaik yang didapatkan untuk *Random Forest* adalah **`n_estimators=100`** dan **`max_depth=None`**. Model akhir *Random Forest* dibangun menggunakan parameter ini.
+
+Pada model Random Forest, proses pencarian parameter terbaik dilakukan menggunakan **GridSearchCV** dengan eksplorasi kombinasi hyperparameter sebagai berikut:
+
+- **`n_estimators`**  
+  Menentukan jumlah pohon keputusan (*decision trees*) yang digunakan dalam ensemble Random Forest. Semakin banyak pohon, semakin stabil dan akurat model, namun akan membutuhkan waktu komputasi yang lebih besar. Nilai yang diuji:
+  - `50`, `100`, `150`, `200`
+
+- **`max_depth`**  
+  Menentukan kedalaman maksimum dari setiap pohon keputusan dalam ensemble. Seperti pada Decision Tree, pengaturan kedalaman ini penting untuk mencegah overfitting. Nilai yang diuji:
+  - `4`, `6`, `8`, `10`, dan `None`  
+  Nilai `None` berarti pohon akan tumbuh hingga seluruh sampel sempurna diklasifikasikan atau batas pemisahan minimum terpenuhi.
+
+Proses **GridSearchCV** menggunakan *cross-validation* sebanyak 5 lipatan (*5-fold*) dan metrik **F1-score** untuk mengevaluasi performa model pada tiap kombinasi parameter.
+
+Setelah proses tuning, diperoleh kombinasi parameter terbaik:
+- `n_estimators = 100`
+- `max_depth = None`
+
+Model final Random Forest dibangun menggunakan parameter tersebut. Penggunaan `max_depth=None` mengindikasikan bahwa pohon tidak dibatasi kedalamannya, memungkinkan pembelajaran pola kompleks dari data, sedangkan `n_estimators=100` memberikan keseimbangan antara akurasi dan waktu pelatihan.
+
 
 -----
 
